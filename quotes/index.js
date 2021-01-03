@@ -1,7 +1,7 @@
 const mathLib = require('./lib/math.js')
 const quotesLib = require('./lib/data')
 
-let app = {}
+const app = {}
 
 app.config = {
   timeBetweenQuotes: 2000,
