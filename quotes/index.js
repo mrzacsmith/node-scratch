@@ -3,11 +3,11 @@ const quotesLib = require('./lib/data')
 
 const app = {}
 
-app.config = {
+config = {
   timeBetweenQuotes: 2000,
 }
 
-app.printAQuote = () => {
+printAQuote = () => {
   const allQuotes = quotesLib.allQuotes()
   const numberOfQuotes = allQuotes.length
   const randomNumber = mathLib.getRandomNumber(1, numberOfQuotes)
@@ -16,10 +16,10 @@ app.printAQuote = () => {
   console.log(selectedQuote)
 }
 
-app.indefiniteLoop = () => {
-  setInterval(app.printAQuote, app.config.timeBetweenQuotes)
+indefiniteLoop = () => {
+  setInterval(printAQuote, config.timeBetweenQuotes)
 }
 
-app.indefiniteLoop()
+indefiniteLoop()
 
 // console.log(mathLib.getRandomNumber(1, 13))
