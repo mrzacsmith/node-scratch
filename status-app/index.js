@@ -31,8 +31,8 @@ httpsServer.listen(config.httpsPort, () => {
 // handlers
 const handlers = {}
 
-handlers.sample = (data, callback) => {
-  callback(406, { name: 'sample handler' })
+handlers.ping = (data, callback) => {
+  callback(200)
 }
 
 let currentTime = new Date().toLocaleTimeString()
@@ -50,7 +50,7 @@ handlers.notFound = (data, callback) => {
 
 // Router
 const router = {
-  sample: handlers.sample,
+  sample: handlers.ping,
   status: handlers.status,
 }
 
