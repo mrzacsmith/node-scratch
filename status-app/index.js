@@ -1,9 +1,60 @@
 const http = require('http')
+const https = require('https')
 const url = require('url')
 const { StringDecoder } = require('string_decoder')
 const config = require('./config')
+const fs = require('fs')
 
-const server = http.createServer((req, res) => {
+//http server and listener
+const httpServer = http.createServer((req, res) => {
+  unifiedServer(req, res)
+})
+
+httpServer.listen(config.httpPort, () => {
+  console.log(`** Server is running on port ${config.httpPort}.`)
+})
+
+// https server and listener
+const httpsServerOptions = {
+  key: fs.readFileSync('./https/key.pem'),
+  cert: fs.readFileSync('./https/cert.pem'),
+}
+
+const httpsServer = https.createServer(httpsServerOptions, (req, res) => {
+  unifiedServer(req, res)
+})
+
+httpsServer.listen(config.httpsPort, () => {
+  console.log(`** Secure server is running on port ${config.httpsPort}`)
+})
+
+// handlers
+const handlers = {}
+
+handlers.sample = (data, callback) => {
+  callback(406, { name: 'sample handler' })
+}
+
+let currentTime = new Date().toLocaleTimeString()
+handlers.status = (data, callback) => {
+  callback(200, {
+    currentTime,
+    message: 'Server is live',
+    author: 'Github @MrZacSmith',
+  })
+}
+
+handlers.notFound = (data, callback) => {
+  callback(404)
+}
+
+// Router
+const router = {
+  sample: handlers.sample,
+  status: handlers.status,
+}
+
+const unifiedServer = (req, res) => {
   // 1: parse url
   let parsedUrl = url.parse(req.url, true)
 
@@ -62,35 +113,4 @@ const server = http.createServer((req, res) => {
       // console.log('query', JSON.stringify(queryStringObject, null, 4))
     })
   })
-})
-
-// handlers
-const handlers = {}
-
-handlers.sample = (data, callback) => {
-  callback(406, { name: 'sample handler' })
 }
-
-let currentTime = new Date().toLocaleTimeString()
-handlers.status = (data, callback) => {
-  callback(200, {
-    currentTime,
-    message: 'Server is live',
-    author: 'Github @MrZacSmith',
-  })
-}
-
-handlers.notFound = (data, callback) => {
-  callback(404)
-}
-
-// Router
-const router = {
-  sample: handlers.sample,
-  status: handlers.status,
-}
-
-const PORT = config.port
-server.listen(PORT, () => {
-  console.log(`** Server is running on port ${PORT} in ${config.envName} mode.`)
-})
