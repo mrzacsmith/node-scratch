@@ -4,6 +4,13 @@ const url = require('url')
 const { StringDecoder } = require('string_decoder')
 const config = require('./config')
 const fs = require('fs')
+const _data = require('./lib/data')
+
+// TESTING
+// @TODO delete this
+_data.create('test', 'newFile', { foo: 'bar' }, (err) => {
+  console.log('this was error', err)
+})
 
 //http server and listener
 const httpServer = http.createServer((req, res) => {
